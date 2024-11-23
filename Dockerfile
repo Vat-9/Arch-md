@@ -1,15 +1,19 @@
-FROM quay.io/taira_makino/taira_tech:latest
+FROM node:lts-buster
 
-RUN git clone https://github.com/Vat-9/Arch-md /root/Anonphoenix007
+RUN apt-get update && \
+  apt-get install -y \
+  ffmpeg \
+  imagemagick \
+  webp && \
+  apt-get upgrade -y && \
+  rm -rf /var/lib/apt/lists/*
 
-# Clear npm cache and remove node_modules directories
-RUN npm cache clean --force
-RUN rm -rf /root/Anonphoenix007/node_modules
+COPY package.json .
 
-# Install dependencies
-WORKDIR /root/Anonphoenix007
 RUN npm install
 
-# Add additional Steps To Run...
+COPY . .
+
 EXPOSE 3000
-CMD ["npm","start" ]
+
+CMD ["node", "queen.js"]
